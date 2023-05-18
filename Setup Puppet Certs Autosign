@@ -1,0 +1,77 @@
+
+Question: The Puppet server package is already installed on puppet master i.e jump server and the Puppet agent package is already installed on all App Servers. However, you may need to start the required services on all of these servers.
+
+    Configure autosign configuration on the Puppet master i.e jump server (by creating an autosign.conf in the puppet configuration directory) and assign the certificates for master node as well as for the all agent nodes. Use the respective host's FDQN to assign the certificates.
+
+    Use alias puppet (dns_alt_names) for master node and add its entry in /etc/hosts config file on master i.e Jump Server as well as on the all agent nodes i.e App Servers.
+
+Notes: :- Please make sure to run the puppet agent test using sudo on agent nodes, otherwise you can face certificate issues. In that case you will have to clean the certificates first and then you will be able to run the puppet agent test.
+
+:- Before clicking on the Check button please make sure to verify puppet server and puppet agent services are up and running on the respective servers, also please make sure to run puppet agent test to apply/test the changes manually first.
+
+:- Please note that once lab is loaded, the puppet server service should start automatically on puppet master server, however it can take upto 2-3 minutes to start.
+
+Solution: 
+
+In jump server at first edit the hosts file
+
+vi /etc/hosts
+
+Add puppet with the jump server
+
+172.16.238.3    jump_host.stratos.xfusioncorp.com jump_host puppet
+
+Then ping it
+
+ping puppet
+
+Then create an austosign.conf
+
+vi /etc/puppetlabs/puppet/autosign.conf
+
+jump_host.stratos.xfusioncorp.com
+
+stapp01.stratos.xfusioncorp.com
+
+stapp02.stratos.xfusioncorp.com
+
+stapp03.stratos.xfusioncorp.com
+
+Then restart puppet server
+
+systemctl restart puppetserver
+
+systemctl status puppetserver 
+
+Finally sign the certificates
+
+puppetserver ca sign --all
+
+Next, go to all appservers (stapp01,stapp02, stapp03)
+
+Then in all appservers edit the hosts file
+
+vi /etc/hosts
+
+Add puppet with the jump server
+
+172.16.238.3    jump_host.stratos.xfusioncorp.com jump_host puppet
+
+Then ping it
+
+ping puppet
+
+Restart the puppet
+
+systemctl restart puppet
+
+systemctl status puppet
+
+Validateby running puppet agent
+
+puppet agent -tv
+
+Then go to jump servers and run
+
+puppetserver ca list --all
+
