@@ -1,0 +1,115 @@
+Question: The Puppet master and Puppet agent nodes have been set up by the Nautilus DevOps team so they can perform testing. In Stratos DC all app servers have been configured as Puppet agent nodes. Below are details about the testing scenario they want to proceed with.
+
+Use Puppet file resource and perform the task below:
+
+
+Create a Puppet programming file blog.pp under /etc/puppetlabs/code/environments/production/manifests directory on master node i.e Jump Server.
+
+Using /etc/puppetlabs/code/environments/production/manifests/blog.pp create a file media.txt under /opt/sysops directory on App Server 1.
+
+Note: Please perform this task using blog.pp only, do not create any separate inventory file.
+root@jump_host /# cd /etc/puppetlabs/code/environments/production/manifests/
+
+root@jump_host /etc/puppetlabs/code/environments/production/manifests# ll
+
+total 0
+
+root@jump_host /etc/puppetlabs/code/environments/production/manifests# vi blog.pp
+
+root@jump_host /etc/puppetlabs/code/environments/production/manifests# cat blog.pp
+
+class file_creator {
+
+  # Now create media.txt under /opt/sysops
+
+  file { '/opt/sysops/media.txt':
+
+    ensure => 'present',
+
+  }
+
+}
+
+ node 'stapp01.stratos.xfusioncorp.com' {
+
+  include file_creator
+
+}
+
+root@jump_host /etc/puppetlabs/code/environments/production/manifests#
+
+2. Validate the puppet files by below command.
+
+
+root@jump_host /etc/puppetlabs/code/environments/production/manifests# puppet parser validate blog.pp
+
+root@jump_host /etc/puppetlabs/code/environments/production/manifests#
+
+3. Login on all  App server  (stapp01, stapp02, stapp03 ) & switch to root  user 
+
+
+root@jump_host /# ssh tony@stapp01
+
+The authenticity of host 'stapp01 (172.16.238.10)' can't be established.
+
+ECDSA key fingerprint is SHA256:w9cDRojDoclOxdu1W23Ns2HPyANPrDzhk9VfqtTDoJQ.
+
+
+ECDSA key fingerprint is MD5:a8:3b:55:35:c2:5c:56:76:c8:d0:78:13:7a:4d:8b:e1.
+
+
+Are you sure you want to continue connecting (yes/no)? yes
+
+Warning: Permanently added 'stapp01,172.16.238.10' (ECDSA) to the list of known hosts.
+
+tony@stapp01's password:
+
+[tony@stapp01 ~]$ sudo su -
+
+We trust you have received the usual lecture from the local System
+
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+
+    #2) Think before you type.
+
+    #3) With great power comes great responsibility.
+
+[sudo] password for tony:
+
+[root@stapp01 ~]#
+
+ 4. Run Puppet agent to pull the configuration from puppet server
+
+
+[root@stapp01 ~]# puppet agen -tv
+
+Info: Using configured environment 'production'
+
+Info: Retrieving pluginfacts
+
+Info: Retrieving plugin
+
+Info: Retrieving locales
+
+Info: Caching catalog for stapp01.stratos.xfusioncorp.com
+
+Info: Applying configuration version '1625738289'
+
+Notice: /Stage[main]/File_creator/File[/opt/sysops/media.txt]/ensure: created
+
+Notice: Applied catalog in 0.03 seconds
+
+[root@stapp01 ~]#
+
+
+5. Validate the task by running
+
+
+ [root@stapp01 ~]# ll /opt/sysops/
+
+-rw-r--r-- 1 root root 0 Jul  8 09:58 media.txt
+
+[root@stapp01 ~]# 
+
