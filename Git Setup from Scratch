@@ -1,0 +1,53 @@
+Question :  Some new developers have joined xFusionCorp Industries and have been assigned Nautilus project.
+They are going to start development on a new application, and some pre-requisites have been shared with the DevOps team to proceed with.
+Please note that all tasks need to be performed on storage server in Stratos DC.
+
+a. Install git, set up any values for user.email and user.name globally and create a bare repository /opt/apps.git.
+
+b. There is an update hook (to block direct pushes to master branch) under /tmp on storage server itself; use the same to block direct pushes to master branch in /opt/apps.git repo.
+
+c. Clone /opt/apps.git repo in /usr/src/kodekloudrepos/apps directory.
+
+d. Create a new branch xfusioncorp_apps in repo that you cloned in /usr/src/kodekloudrepos.
+
+e. There is a readme.md file in /tmp on storage server itself; copy that to repo, add/commit in the new branch you created, and finally push your branch to origin.
+f. Also create master branch from your branch and remember you should not be able to push to master as per hook you have set up.
+
+1. At first login on to the storage server & Switch to the root user 
+ssh natasha@ststor01
+sudo -i
+
+2. Install Git package 
+yum install -y git
+
+3. Setup git config for the user.email and user.name globally  
+git config --global --add user.name natasha
+git config --global --add user.email natasha@stratos.xfusioncorp.com
+
+4. Create a bare repository
+git init --bare /opt/apps.git
+
+5. Copy the /tmp/update hook to hooks directory under /opt/apps.git
+cp /tmp/update  /opt/apps.git/hooks/
+
+6. clone git repository under /usr/src/kodekloudrepos/  directory.
+cd /usr/src/kodekloudrepos/
+git clone  /opt/apps.git
+
+7. Navigate to the clone directory /usr/src/kodekloudrepos/apps
+ cd apps
+
+8. Create a new branch as per the task  in the repo that you cloned 
+ [root@ststor01 apps]# git checkout -b xfusioncorp_apps
+
+9. There is a readme.md file in /tmp , copy that to repo, add/commit in the new branch and finally push your branch to origin.  
+[root@ststor01 apps]# cp /tmp/readme.md .
+[root@ststor01 apps]# git add readme.md
+[root@ststor01 apps]# git commit -m "Readme file"
+[root@ststor01 apps]# git push origin xfusioncorp_apps
+
+10. To validate the task switch to  master branch and attempt a push to origin . 
+[root@ststor01 apps]# git checkout -b master
+[root@ststor01 apps]# git branch
+[root@ststor01 apps]# git push origin master
+ You should get an error hook declined     ! [remote rejected] master -> master (hook declined) 
