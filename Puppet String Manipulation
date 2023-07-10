@@ -1,0 +1,41 @@
+There is some data on App Server 2 in Stratos DC. 
+The Nautilus development team shared some requirement with the DevOps team to alter some of the data as per recent changes.
+The DevOps team is working to prepare a Puppet programming file to accomplish this. Below you can find more details about the task.
+
+Create a Puppet programming file demo.pp under /etc/puppetlabs/code/environments/production/manifests directory on Puppet master node i.e Jump Server and by using puppet file_line resource perform the following tasks.
+We have a file /opt/sysops/demo.txt on App Server 2. Use the Puppet programming file mentioned above to replace line Welcome to Nautilus Industries! to Welcome to xFusionCorp Industries!, no other data should be altered in this file.
+
+Note: Please perform this task using demo.pp only, do not create any separate inventory file.
+
+cd /etc/puppetlabs/code/environments/production/manifests/
+cat demo.pp
+class data_replacer {
+
+  file_line { 'line_replace':
+
+    path => '/opt/sysops/demo.txt',
+
+    match => 'Welcome to Nautilus Industries!',
+
+    line  => 'Welcome to xFusionCorp Industries!',
+
+  }
+
+}
+
+node 'stapp02.stratos.xfusioncorp.com' {
+
+  include data_replacer
+
+}
+puppet parser validate demo.pp
+ssh steve@stapp02
+sudo -i
+puppet agent -tv
+at /opt/sysops/demo.txt
+
+This is Nautilus sample file, created using Puppet !
+
+Welcome to xFusionCorp Industries!
+
+Please do not modify this file manually!
