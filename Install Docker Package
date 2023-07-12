@@ -1,0 +1,33 @@
+To install Docker CE and Docker Compose packages on App Server 2 and start the Docker service, you can follow the steps below:
+
+Connect to App Server 2: Use SSH or any other remote access method to connect to App Server 2.
+
+Update the system: It's always a good practice to update the system before installing any new packages. Run the following command to update the system:
+
+sudo apt update
+Install Docker CE: Docker CE (Community Edition) is the open-source version of Docker. Use the following commands to install Docker CE:
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+
+sudo apt install docker-ce
+
+Verify Docker installation: After the installation is complete, you can verify the Docker installation by running the following command:
+docker --version
+This command should display the installed Docker version information.
+
+Install Docker Compose: Docker Compose is a tool used for defining and running multi-container Docker applications. Use the following commands to install Docker Compose:
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+Verify Docker Compose installation: Once the installation is complete, verify Docker Compose by running the following command:
+docker-compose --version
+This command should display the installed Docker Compose version information.
+
+Start Docker service: Finally, start the Docker service using the following command:
+sudo service docker start
+This will start the Docker service on App Server 2.
+
+Now Docker CE and Docker Compose should be installed and the Docker service should be running on App Server 2. You can proceed with using Docker and Docker Compose for your containerization needs.
