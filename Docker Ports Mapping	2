@@ -1,0 +1,22 @@
+Pull nginx:alpine-perl docker image on Application Server 2.
+
+b. Create a container named cluster using the image you pulled.
+
+c. Map host port 8088 to container port 80. Please keep the container in running state.
+
+docker pull nginx:alpine-perl
+This command will download the nginx:alpine-perl image from Docker Hub.
+
+Once the image is pulled, you can create a container named cluster with the port mapping using the following command:
+
+docker run -d -p 8088:80 --name cluster nginx:alpine-perl
+
+This command creates a detached (-d) container named cluster from the nginx:alpine-perl image. It maps host port 8088 to container port 80, allowing you to access the containerized NGINX server on port 8088 of Application Server 2.
+
+The --name cluster option assigns the container the name cluster.
+
+After executing the above command, the container will start running in the background. You can verify the running container by using the following command:
+
+docker ps
+
+This command will list all running containers, and you should see the cluster container in the list.
